@@ -17,6 +17,10 @@ use librespot::{
         mixer::{self, Mixer},
     },
 };
+
+#[cfg(target_os = "windows")]
+use winrt::import;
+
 use log::{error, info};
 use std::str::FromStr;
 use std::{io, process::exit};
@@ -27,6 +31,15 @@ pub(crate) fn initial_state(
     handle: Handle,
     config: config::SpotifydConfig,
 ) -> main_loop::MainLoopState {
+    #[cfg(target_os = "windows")]
+    import!(dependencies
+                os
+            types
+                windows::media::SystemMediaTransportControls
+    );
+    #[cfg(target_os = "windows")]
+    use windows::media::SystemMediaTransportControls;
+
     #[cfg(feature = "alsa_backend")]
     let mut mixer = {
         let local_audio_device = config.audio_device.clone();
