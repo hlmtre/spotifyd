@@ -40,6 +40,9 @@ librespot = { version = "0.1.1", default-features = false, features = [
     "with-tremor"
 ] }
 
+#[package.metadata.winrt.dependencies]
+#"Microsoft.Windows.Media" = "10.0.19041.1"
+
 [target."cfg(unix)".dependencies]
 daemonize = "0.4"
 syslog = "4"

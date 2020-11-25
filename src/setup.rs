@@ -19,7 +19,7 @@ use librespot::{
 };
 
 #[cfg(target_os = "windows")]
-use winrt::import;
+use winrt;
 
 use log::{error, info};
 use std::str::FromStr;
@@ -31,14 +31,32 @@ pub(crate) fn initial_state(
     handle: Handle,
     config: config::SpotifydConfig,
 ) -> main_loop::MainLoopState {
+
     #[cfg(target_os = "windows")]
-    import!(dependencies
+    winrt::import!(dependencies
                 os
             types
-                windows::media::SystemMediaTransportControls
+                windows::media::playback::*
     );
-    #[cfg(target_os = "windows")]
-    use windows::media::SystemMediaTransportControls;
+    use windows::media::playback::{MediaPlaybackSession, MediaPlayer};
+    let a = MediaPlayer::new();
+    match a {
+        Ok(x) => {
+            eprintln!("{:#?}", x);
+            let _b = x.playback_session();
+            match _b {
+                Ok(b) => {
+                    eprintln!("{:#?}", b);
+                },
+                Err(_) => {
+
+                }
+            }
+        },
+        Err(_) => {
+
+        }
+    }
 
     #[cfg(feature = "alsa_backend")]
     let mut mixer = {
